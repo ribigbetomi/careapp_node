@@ -7,7 +7,7 @@ twilioRoute.post("/", async (req, res) => {
   const authToken = process.env.TWILIO_AUTH_TOKEN;
   const twilioPhone = process.env.TWILIO_PHONE_NUMBER;
   const userPhone = req.body.phone_number;
-  //   const confirmationCode = 123456;
+
   const confirmationCode = generateRandomCode();
 
   const client = require("twilio")(accountSid, authToken);

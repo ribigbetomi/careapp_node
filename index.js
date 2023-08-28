@@ -32,29 +32,3 @@ app.use("/api/twilio", twilioRoute);
 const PORT = process.env.PORT || 1000;
 
 app.listen(PORT, console.log(`Server running on port ${PORT}`));
-
-// Download the helper library from https://www.twilio.com/docs/node/install
-// Set environment variables for your credentials
-// Read more at http://twil.io/secure
-// const accountSid = "AC650d9b44c8f062605e28e4bde15d874c";
-// const authToken = "1151e08f8dfbf8a99f1c7243aff76455";
-// const verifySid = "VA6e8a90b83325f569c469b6dd24163d95";
-// const client = require("twilio")(accountSid, authToken);
-
-// client.verify.v2
-//   .services(verifySid)
-//   .verifications.create({ to: "+447899810854", channel: "sms" })
-//   .then((verification) => console.log(verification))
-//   .then(() => {
-//     const readline = require("readline").createInterface({
-//       input: process.stdin,
-//       output: process.stdout,
-//     });
-//     readline.question("Please enter the OTP:", (otpCode) => {
-//       client.verify.v2
-//         .services(verifySid)
-//         .verificationChecks.create({ to: "+447899810854", code: otpCode })
-//         .then((verification_check) => console.log(verification_check.status))
-//         .then(() => readline.close());
-//     });
-//   });

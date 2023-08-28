@@ -7,6 +7,10 @@ const careWorkerSchema = mongoose.Schema(
       required: true,
       ref: "User",
     },
+    name: {
+      type: String,
+      required: true,
+    },
     phoneNumber: { type: Number, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
