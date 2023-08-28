@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const visitSchema = mongoose.Schema(
   {
@@ -6,14 +6,31 @@ const visitSchema = mongoose.Schema(
       type: Date,
       required: true,
     },
+    date: {
+      type: Date,
+    },
+    type: {
+      type: String,
+      required: true,
+    },
     serviceUserID: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "ServiceUser",
     },
-    careWorkersID: [
+    careWorkers: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "CareWorker",
+        },
+        name: {
+          type: String,
+          ref: "CareWorker",
+        },
+        checkInTime: { type: Date },
+        checkOutTime: { type: Date },
+        timeSpent: { type: Number },
       },
     ],
     careLog: {
@@ -68,4 +85,4 @@ const visitSchema = mongoose.Schema(
 
 const Visit = mongoose.model("Visit", visitSchema);
 
-export default Visit;
+module.exports = Visit;

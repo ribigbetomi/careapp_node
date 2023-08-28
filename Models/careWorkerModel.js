@@ -1,9 +1,23 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const careWorkerSchema = mongoose.Schema(
   {
+    userID: {
+      type: Mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
     phoneNumber: { type: Number, required: true },
     email: { type: String, required: true },
+    password: { type: String, required: true },
+    visits: [
+      {
+        id: { type: mongoose.Schema.Types.ObjectId, ref: "Visit" },
+        checkInTime: { type: Date },
+        checkOutTime: { type: Date },
+        timeSpent: { type: Number },
+      },
+    ],
     availability: [
       {
         type: String,
@@ -16,6 +30,20 @@ const careWorkerSchema = mongoose.Schema(
   }
 );
 
+// Login
+careWorker.methods.matchPassword = async function (enterPassword) {
+  return await bcrypt.compare(enterPassword, this.password);
+};
+
+// Register
+careWorkerSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    next();
+  }
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
+
 const CareWorker = mongoose.model("CareWorker", careWorkerSchema);
 
-export default CareWorker;
+module.exports = CareWorker;

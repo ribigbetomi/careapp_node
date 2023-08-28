@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const serviceUserSchema = mongoose.Schema(
   {
@@ -19,12 +19,94 @@ const serviceUserSchema = mongoose.Schema(
         ref: "Visit",
       },
     ],
-    tasksAndMedications: [
+    visitDays: [
       {
         type: String,
         required: true,
       },
     ],
+    scheduledVisits: {
+      morning: {
+        tasks: [
+          {
+            type: String,
+            required: true,
+          },
+        ],
+        medications: [
+          {
+            type: String,
+            required: true,
+          },
+        ],
+        PRNs: [
+          {
+            type: String,
+            required: true,
+          },
+        ],
+      },
+      lunch: {
+        tasks: [
+          {
+            type: String,
+            required: true,
+          },
+        ],
+        medications: [
+          {
+            type: String,
+            required: true,
+          },
+        ],
+        PRNs: [
+          {
+            type: String,
+            required: true,
+          },
+        ],
+      },
+      tea: {
+        tasks: [
+          {
+            type: String,
+            required: true,
+          },
+        ],
+        medications: [
+          {
+            type: String,
+            required: true,
+          },
+        ],
+        PRNs: [
+          {
+            type: String,
+            required: true,
+          },
+        ],
+      },
+      bed: {
+        tasks: [
+          {
+            type: String,
+            required: true,
+          },
+        ],
+        medications: [
+          {
+            type: String,
+            required: true,
+          },
+        ],
+        PRNs: [
+          {
+            type: String,
+            required: true,
+          },
+        ],
+      },
+    },
   },
   {
     timestamps: true,
@@ -33,4 +115,4 @@ const serviceUserSchema = mongoose.Schema(
 
 const ServiceUser = mongoose.model("ServiceUser", serviceUserSchema);
 
-export default ServiceUser;
+module.exports = ServiceUser;
