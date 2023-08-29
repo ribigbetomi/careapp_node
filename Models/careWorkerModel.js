@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const careWorkerSchema = mongoose.Schema(
   {
     userID: {
-      type: Mongoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "User",
     },
@@ -11,6 +11,7 @@ const careWorkerSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    isAdmin: { type: Boolean, default: false },
     phoneNumber: { type: Number, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
@@ -25,7 +26,6 @@ const careWorkerSchema = mongoose.Schema(
     availability: [
       {
         type: String,
-        required: true,
       },
     ],
   },

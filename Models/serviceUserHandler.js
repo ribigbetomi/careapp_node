@@ -2,9 +2,17 @@ const mongoose = require("mongoose");
 
 const serviceUserHandlerSchema = mongoose.Schema(
   {
+    userID: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
     name: { type: String, required: true },
-    phoneNumber: { type: Number, required: true },
+    email: { type: String, required: true },
     password: { type: String, required: true },
+    phoneNumber: { type: Number, required: true },
+    userType: { type: Boolean, default: false },
+    isAdmin: { type: Boolean, default: false },
   },
   {
     timestamps: true,

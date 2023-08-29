@@ -36,7 +36,6 @@ const visitSchema = mongoose.Schema(
     careLog: {
       visitID: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
       },
       note: {
         type: String,
@@ -74,7 +73,7 @@ const visitSchema = mongoose.Schema(
     },
     taskAndMedications: [
       {
-        name: { type: String, required },
+        name: { type: String },
       },
     ],
   },
