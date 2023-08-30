@@ -14,6 +14,10 @@ const serviceUserSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    gpContact: {
+      type: "String",
+      required: true,
+    },
     visits: [
       {
         ref: "Visit",

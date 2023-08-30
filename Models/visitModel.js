@@ -38,9 +38,9 @@ const visitSchema = mongoose.Schema(
       },
     ],
     careLog: {
-      visitID: {
-        type: mongoose.Schema.Types.ObjectId,
-      },
+      // visitID: {
+      //   type: mongoose.Schema.Types.ObjectId,
+      // },
       note: {
         type: String,
       },
@@ -53,9 +53,7 @@ const visitSchema = mongoose.Schema(
         quantity: { type: String },
       },
       food: {
-        name: { type: String },
-        observed: { type: Boolean },
-        quantity: { type: String },
+        type: String,
       },
       toiletVisit: {
         type: { type: String },
@@ -63,7 +61,8 @@ const visitSchema = mongoose.Schema(
         quantity: { type: String },
       },
       mood: {
-        type: String,
+        type: { type: String },
+        note: { type: String },
       },
       mentalHealth: {
         type: String,
