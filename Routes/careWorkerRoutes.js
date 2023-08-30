@@ -3,6 +3,7 @@ const asyncHandler = require("express-async-handler");
 const { protect, admin } = require("../Middleware/AuthMiddleware");
 const generateToken = require("../utils/generateToken");
 const CareWorker = require("../Models/careWorkerModel");
+const User = require("../Models/userModel");
 
 const careWorkerRouter = express.Router();
 
@@ -20,7 +21,7 @@ careWorkerRouter.post(
         phoneNumber: careWorker.phoneNumber,
         email: careWorker.email,
         isAdmin: careWorker.isAdmin,
-        token: generateToken(careWorker._id),
+        token: generateToken(careWorker.userID),
         createdAt: careWorker.createdAt,
       });
     } else {
@@ -39,31 +40,90 @@ careWorkerRouter.post(
     const careWorkerExists = await CareWorker.findOne({ phoneNumber });
 
     if (careWorkerExists) {
-      res.status(400);
-      throw new Error("CareWorker already exists");
+      res.status(201).json({
+        _id: careWorkerExists._id,
+        name: careWorkerExists.name,
+        email: careWorkerExists.email,
+        isAdmin: careWorkerExists.isAdmin,
+        token: generateToken(careWorkerExists.userID),
+      });
     }
 
-    const careWorker = await CareWorker.create({
-      name,
-      email,
-      password,
-      phoneNumber,
-      userType,
-      userID,
-    });
+    const user = await User.findOne({ phoneNumber });
+
+    if (user) {
+      const careWorker = await CareWorker.create({
+        name: user.name,
+        email: user.email,
+        // password,
+        phoneNumber,
+        userType: user.accessType,
+        userID: user._id,
+      });
+
+      if (careWorker) {
+        res.status(201).json({
+          userID: careWorker.userID,
+          name: careWorker.name,
+          email: careWorker.email,
+          phoneNumber: careWorker.phoneNumber,
+          userType: careWorker.userType,
+          token: generateToken(careWorker.userID),
+        });
+      } else {
+        res.status(400);
+        throw new Error("Invalid User Data");
+      }
+    }
+  })
+);
+
+careWorkerRouter.get(
+  "/:userID",
+  protect,
+  asyncHandler(async (req, res) => {
+    //   const { phoneNumber, password } = req.body;
+    const careWorker = await CareWorker.findOne({
+      userID: req.params.userID,
+    }).select("-password");
 
     if (careWorker) {
-      res.status(201).json({
-        userID: careWorker.userID,
-        name: careWorker.name,
-        email: careWorker.email,
-        phoneNumber: careWorker.phoneNumber,
-        userType: careWorker.userType,
-        token: generateToken(careWorker._id),
+      res.json(careWorker);
+    } else {
+      res.status(401);
+      throw new Error("User not Found");
+    }
+  })
+);
+
+careWorkerRouter.put(
+  "/:userID",
+  protect,
+  asyncHandler(async (req, res) => {
+    const { name, phoneNumber, email, availability } = req.body;
+    const careWorker = await CareWorker.findOne({ userID: req.params.userID });
+
+    if (careWorker) {
+      careWorker.name = name || careWorker.name;
+      careWorker.phoneNumber = phoneNumber || careWorker.phoneNumber;
+      careWorker.email = email || careWorker.email;
+      careWorker.availability = availability || careWorker.availability;
+
+      if (req.body.password) {
+        careWorker.password = req.body.password;
+      }
+      const updatedCareWorker = await careWorker.save();
+
+      res.json({
+        _id: updatedCareWorker._id,
+        name: updatedCareWorker.name,
+        phoneNumber: updatedCareWorker.phoneNumber,
+        email: updatedCareWorker.email,
+        availabilty: updatedCareWorker.availabilty,
       });
     } else {
-      res.status(400);
-      throw new Error("Invalid User Data");
+      res.status(401);
+      throw new Error("User not Found");
     }
   })
 );

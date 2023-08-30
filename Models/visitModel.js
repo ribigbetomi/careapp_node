@@ -2,7 +2,11 @@ const mongoose = require("mongoose");
 
 const visitSchema = mongoose.Schema(
   {
-    time: {
+    startTime: {
+      type: Date,
+      required: true,
+    },
+    endTime: {
       type: Date,
       required: true,
     },
