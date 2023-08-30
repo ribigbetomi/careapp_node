@@ -24,7 +24,7 @@ const visitSchema = mongoose.Schema(
     },
     careWorkers: [
       {
-        id: {
+        userID: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "CareWorker",
         },
@@ -74,7 +74,17 @@ const visitSchema = mongoose.Schema(
         type: String,
       },
     },
-    taskAndMedications: [
+    tasks: [
+      {
+        name: { type: String },
+      },
+    ],
+    medications: [
+      {
+        name: { type: String },
+      },
+    ],
+    PRNs: [
       {
         name: { type: String },
       },

@@ -9,6 +9,17 @@ visitRouter.post(
   "/",
   protect,
   asyncHandler(async (req, res) => {
+    const careLog = {
+      note: {},
+      coronaSymptoms: "",
+      drink: {},
+      food: "",
+      toiletVisit: {},
+      mood: {},
+      mentalHealth: "",
+      physicalHealth: "",
+      weight: "",
+    };
     const { startTime, endTime, date, type, serviceUserID, careWorkers } =
       req.body;
 
@@ -44,34 +55,54 @@ visitRouter.post(
   })
 );
 
-careWorkerRouter.put(
-  "/:userID",
+// Careworker check in to visit
+visitRouter.put(
+  "/:id/visit",
   protect,
   asyncHandler(async (req, res) => {
-    const { name, phoneNumber, email, availability } = req.body;
-    const careWorker = await CareWorker.findOne({ userID: req.params.userID });
+    const { checkInTime } = req.body;
+
+    const visit = await Visit.findById(req.params.id);
+
+    const careWorker = visit.careWorkers.find(
+      (cW) => cW.userID === req.user._id
+    );
 
     if (careWorker) {
-      careWorker.name = name || careWorker.name;
-      careWorker.phoneNumber = phoneNumber || careWorker.phoneNumber;
-      careWorker.email = email || careWorker.email;
-      careWorker.availability = availability || careWorker.availability;
-
-      if (req.body.password) {
-        careWorker.password = req.body.password;
+      if (checkInTime) {
+        careWorker.checkInTime = checkInTime;
+        let updatedCareWorkers = visit.careWorkers.map((cw) =>
+          cw.userID === careWorker.userID ? careWorker : cw
+        );
+        visit = { ...visit, careWorkers: updatedCareWorkers };
       }
-      const updatedCareWorker = await careWorker.save();
 
-      res.json({
-        _id: updatedCareWorker._id,
-        name: updatedCareWorker.name,
-        phoneNumber: updatedCareWorker.phoneNumber,
-        email: updatedCareWorker.email,
-        availabilty: updatedCareWorker.availabilty,
-      });
+      const updatedVisit = await Visit.save();
+      res.json(updatedVisit);
     } else {
       res.status(401);
-      throw new Error("User not Found");
+      throw new Error("Something went wrong");
+    }
+  })
+);
+
+// CareWorker update careLog
+visitRouter.put(
+  "/:id/carelog",
+  protect,
+  asyncHandler(async (req, res) => {
+    const { careLog, tasks, medications, PRNs } = req.body;
+
+    const visit = await Visit.findById(req.params.id);
+
+    if (visit) {
+      visit.careLog = careLog;
+
+      const updatedVisit = await Visit.save();
+      res.json(updatedVisit);
+    } else {
+      res.status(401);
+      throw new Error("Something went wrong");
     }
   })
 );
