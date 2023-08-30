@@ -20,8 +20,17 @@ visitRouter.post(
       physicalHealth: "",
       weight: "",
     };
-    const { startTime, endTime, date, type, serviceUserID, careWorkers } =
-      req.body;
+    const {
+      startTime,
+      endTime,
+      date,
+      type,
+      serviceUserID,
+      careWorkers,
+      tasks,
+      medications,
+      PRNs,
+    } = req.body;
 
     const visitExists = await Visit.findOne({ date, type, serviceUserID });
 
@@ -37,6 +46,10 @@ visitRouter.post(
       type,
       serviceUserID,
       careWorkers,
+      careLog,
+      // tasks,
+      // medications,
+      // PRNs,
     });
 
     if (visit) {
@@ -77,7 +90,7 @@ visitRouter.put(
         visit = { ...visit, careWorkers: updatedCareWorkers };
       }
 
-      const updatedVisit = await Visit.save();
+      const updatedVisit = await visit.save();
       res.json(updatedVisit);
     } else {
       res.status(401);
@@ -91,14 +104,55 @@ visitRouter.put(
   "/:id/carelog",
   protect,
   asyncHandler(async (req, res) => {
-    const { careLog, tasks, medications, PRNs } = req.body;
+    const {
+      note,
+      coronaSymptoms,
+      drink,
+      food,
+      toiletVisit,
+      mood,
+      mentalHealth,
+      physicalHealth,
+      weight,
+    } = req.body;
 
     const visit = await Visit.findById(req.params.id);
 
     if (visit) {
-      visit.careLog = careLog;
+      visit.note = note || visit.note;
+      visit.coronaSymptoms = coronaSymptoms || visit.coronaSymptoms;
+      visit.drink = drink || visit.drink;
+      visit.food = food || visit.food;
+      visit.toiletVisit = toiletVisit || visit.toiletVisit;
+      visit.mood = mood || visit.mood;
+      visit.mentalHealth = mentalHealth || visit.mentalHealth;
+      visit.physicalHealth = physicalHealth || visit.physicalHealth;
+      visit.weight = weight || visit.weight;
 
-      const updatedVisit = await Visit.save();
+      const updatedVisit = await visit.save();
+      res.json(updatedVisit);
+    } else {
+      res.status(401);
+      throw new Error("Something went wrong");
+    }
+  })
+);
+
+// CareWorker update tasks and medications
+visitRouter.put(
+  "/:id/tasksandmedications",
+  protect,
+  asyncHandler(async (req, res) => {
+    const { tasks, medications, PRNs } = req.body;
+
+    const visit = await Visit.findById(req.params.id);
+
+    if (visit) {
+      visit.tasks = tasks ? tasks : visit.tasks;
+      visit.medications = medications ? medications : visit.medications;
+      visit.PRNs = PRNs ? PRNs : visit.PRNs;
+
+      const updatedVisit = await visit.save();
       res.json(updatedVisit);
     } else {
       res.status(401);

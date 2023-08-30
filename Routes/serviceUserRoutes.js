@@ -76,7 +76,7 @@ serviceUserRouter.put(
       // serviceUser.email = email || serviceUser.email;
       // serviceUser.availability = availability || serviceUser.availability;
 
-      const updatedServiceUser = await ServiceUser.save();
+      const updatedServiceUser = await serviceUser.save();
 
       res.json(updatedServiceUser);
     } else {
@@ -104,7 +104,7 @@ serviceUserRouter.put(
       serviceUser.scheduledVisits =
         scheduledVisits || serviceUser.scheduledVisits;
 
-      const updatedServiceUser = await ServiceUser.save();
+      const updatedServiceUser = await serviceUser.save();
 
       res.json(updatedServiceUser);
     } else {

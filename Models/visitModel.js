@@ -77,6 +77,7 @@ const visitSchema = mongoose.Schema(
     tasks: [
       {
         name: { type: String },
+        required: true,
       },
     ],
     medications: [

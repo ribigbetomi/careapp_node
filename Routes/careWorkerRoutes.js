@@ -112,7 +112,7 @@ careWorkerRouter.put(
       if (req.body.password) {
         careWorker.password = req.body.password;
       }
-      const updatedCareWorker = await CareWorker.save();
+      const updatedCareWorker = await careWorker.save();
 
       res.json({
         _id: updatedCareWorker._id,
