@@ -74,7 +74,7 @@ visitRouter.post(
 
 // Careworker check in to visit
 visitRouter.put(
-  "/:id/visit",
+  "/:id/checkin",
   protect,
   asyncHandler(async (req, res) => {
     const { checkInTime } = req.body;
@@ -88,6 +88,36 @@ visitRouter.put(
     if (careWorker) {
       if (checkInTime) {
         careWorker.checkInTime = checkInTime;
+        let updatedCareWorkers = visit.careWorkers.map((cw) =>
+          cw.userID === careWorker.userID ? careWorker : cw
+        );
+        visit = { ...visit, careWorkers: updatedCareWorkers };
+      }
+
+      const updatedVisit = await visit.save();
+      res.json(updatedVisit);
+    } else {
+      res.status(401);
+      throw new Error("Something went wrong");
+    }
+  })
+);
+
+visitRouter.put(
+  "/:id/checkout",
+  protect,
+  asyncHandler(async (req, res) => {
+    const { checkOutTime } = req.body;
+
+    const visit = await Visit.findById(req.params.id);
+
+    const careWorker = visit.careWorkers.find(
+      (cW) => cW.userID === req.user._id
+    );
+
+    if (careWorker) {
+      if (checkOutTime) {
+        careWorker.checkOutTime = checkOutTime;
         let updatedCareWorkers = visit.careWorkers.map((cw) =>
           cw.userID === careWorker.userID ? careWorker : cw
         );
