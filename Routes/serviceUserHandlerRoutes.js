@@ -87,36 +87,33 @@ serviceUserHandlerRouter.post(
 );
 
 // // Update password
-// serviceUserHandlerRouter.put(
-//   "/:userID",
-//   protect,
-//   asyncHandler(async (req, res) => {
-//     const { password } = req.body;
-//     const serviceUserHandler = await ServiceUserHandler.findOne({
-//       userID: req.params.userID,
-//     });
+serviceUserHandlerRouter.put(
+  "/:userID",
+  protect,
+  asyncHandler(async (req, res) => {
+    const { password } = req.body;
+    const serviceUserHandler = await ServiceUserHandler.findOne({
+      userID: req.params.userID,
+    });
 
-//     if (serviceUserHandler) {
-//       serviceUserHandler.password = serviceUserHandler.password;
+    if (serviceUserHandler) {
+      if (password) {
+        serviceUserHandler.password = password;
+      }
+      const updatedServiceUserHandler = await serviceUserHandler.save();
 
-//       if (req.body.password) {
-//         serviceUserHandler.password = req.body.password;
-//       }
-//       const updatedServiceUserHandler = await serviceUserHandler.save();
-
-//       res.json({
-//         _id: updatedServiceUserHandler._id,
-//         name: updatedServiceUserHandler.name,
-//         phoneNumber: updatedServiceUserHandler.phoneNumber,
-//         email: updatedServiceUserHandler.email,
-//         availabilty: updatedServiceUserHandler.availabilty,
-//       });
-//     } else {
-//       res.status(401);
-//       throw new Error("User not Found");
-//     }
-//   })
-// );
+      res.json({
+        _id: updatedServiceUserHandler._id,
+        name: updatedServiceUserHandler.name,
+        phoneNumber: updatedServiceUserHandler.phoneNumber,
+        email: updatedServiceUserHandler.email,
+      });
+    } else {
+      res.status(401);
+      throw new Error("User not Found");
+    }
+  })
+);
 
 serviceUserHandlerRouter.get(
   "/:userID",
@@ -138,7 +135,7 @@ serviceUserHandlerRouter.get(
 
 serviceUserHandlerRouter.put(
   "/:userID",
-  protect,
+  admin,
   asyncHandler(async (req, res) => {
     const { name, phoneNumber, email, availability } = req.body;
     const serviceUserHandler = await ServiceUserHandler.findOne({
@@ -155,9 +152,6 @@ serviceUserHandlerRouter.put(
         ? availability
         : serviceUserHandler.availability;
 
-      if (req.body.password) {
-        serviceUserHandler.password = req.body.password;
-      }
       const updatedServiceUserHandler = await serviceUserHandler.save();
 
       res.json({

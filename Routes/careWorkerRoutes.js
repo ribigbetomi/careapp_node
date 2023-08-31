@@ -104,6 +104,32 @@ careWorkerRouter.put(
   "/:userID",
   protect,
   asyncHandler(async (req, res) => {
+    const { password } = req.body;
+    const careWorker = await CareWorker.findOne({ userID: req.params.userID });
+
+    if (careWorker) {
+      if (password) {
+        careWorker.password = password;
+      }
+      const updatedCareWorker = await careWorker.save();
+
+      res.json({
+        _id: updatedCareWorker._id,
+        name: updatedCareWorker.name,
+        phoneNumber: updatedCareWorker.phoneNumber,
+        email: updatedCareWorker.email,
+      });
+    } else {
+      res.status(401);
+      throw new Error("User not Found");
+    }
+  })
+);
+
+careWorkerRouter.put(
+  "/:userID",
+  admin,
+  asyncHandler(async (req, res) => {
     const { name, phoneNumber, email, availability } = req.body;
     const careWorker = await CareWorker.findOne({ userID: req.params.userID });
 
@@ -117,9 +143,6 @@ careWorkerRouter.put(
         ? availability
         : careWorker.availability;
 
-      if (req.body.password) {
-        careWorker.password = req.body.password;
-      }
       const updatedCareWorker = await careWorker.save();
 
       res.json({
