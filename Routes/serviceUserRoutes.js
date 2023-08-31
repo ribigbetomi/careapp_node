@@ -96,13 +96,14 @@ serviceUserRouter.put(
     const serviceUser = await ServiceUser.findById(req.params.id);
 
     if (serviceUser) {
-      serviceUser.name = name || serviceUser.name;
-      serviceUser.address = address || serviceUser.address;
-      serviceUser.entryNote = entryNote || serviceUser.entryNote;
-      serviceUser.gpContact = gpContact || serviceUser.gpContact;
-      serviceUser.visitDays = visitDays || serviceUser.visitDays;
-      serviceUser.scheduledVisits =
-        scheduledVisits || serviceUser.scheduledVisits;
+      serviceUser.name = name ? name : serviceUser.name;
+      serviceUser.address = address ? address : serviceUser.address;
+      serviceUser.entryNote = entryNote ? entryNote : serviceUser.entryNote;
+      serviceUser.gpContact = gpContact ? gpContact : serviceUser.gpContact;
+      serviceUser.visitDays = visitDays ? visitDays : serviceUser.visitDays;
+      serviceUser.scheduledVisits = scheduledVisits
+        ? scheduledVisits
+        : serviceUser.scheduledVisits;
 
       const updatedServiceUser = await serviceUser.save();
 

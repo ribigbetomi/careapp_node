@@ -15,12 +15,10 @@ const careWorkerSchema = mongoose.Schema(
     phoneNumber: { type: Number, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
+    companyName: { type: String, required: true },
     visits: [
       {
         id: { type: mongoose.Schema.Types.ObjectId, ref: "Visit" },
-        checkInTime: { type: Date },
-        checkOutTime: { type: Date },
-        timeSpent: { type: Number },
       },
     ],
     availability: [

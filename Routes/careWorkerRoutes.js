@@ -20,6 +20,7 @@ careWorkerRouter.post(
         name: careWorker.name,
         phoneNumber: careWorker.phoneNumber,
         email: careWorker.email,
+        companyName: careWorker.companyName,
         isAdmin: careWorker.isAdmin,
         token: generateToken(careWorker.userID),
         createdAt: careWorker.createdAt,
@@ -44,6 +45,7 @@ careWorkerRouter.post(
         _id: careWorkerExists._id,
         name: careWorkerExists.name,
         email: careWorkerExists.email,
+        companyName: careWorkerExists.companyName,
         isAdmin: careWorkerExists.isAdmin,
         token: generateToken(careWorkerExists.userID),
       });
@@ -55,8 +57,9 @@ careWorkerRouter.post(
       const careWorker = await CareWorker.create({
         name: user.name,
         email: user.email,
+        companyName: user.companyName,
         // password,
-        phoneNumber,
+        phoneNumber: user.phoneNumber,
         userType: user.accessType,
         userID: user._id,
       });
@@ -66,6 +69,7 @@ careWorkerRouter.post(
           userID: careWorker.userID,
           name: careWorker.name,
           email: careWorker.email,
+          companyName: careWorker.companyName,
           phoneNumber: careWorker.phoneNumber,
           userType: careWorker.userType,
           token: generateToken(careWorker.userID),
@@ -104,10 +108,14 @@ careWorkerRouter.put(
     const careWorker = await CareWorker.findOne({ userID: req.params.userID });
 
     if (careWorker) {
-      careWorker.name = name || careWorker.name;
-      careWorker.phoneNumber = phoneNumber || careWorker.phoneNumber;
-      careWorker.email = email || careWorker.email;
-      careWorker.availability = availability || careWorker.availability;
+      careWorker.name = name ? name : careWorker.name;
+      careWorker.phoneNumber = phoneNumber
+        ? phoneNumber
+        : careWorker.phoneNumber;
+      careWorker.email = email ? email : careWorker.email;
+      careWorker.availability = availability
+        ? availability
+        : careWorker.availability;
 
       if (req.body.password) {
         careWorker.password = req.body.password;

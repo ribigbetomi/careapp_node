@@ -5,32 +5,39 @@ const Visit = require("../Models/visitModel");
 
 const visitRouter = express.Router();
 
+visitRouter.get(
+  "/:id",
+  protect,
+  asyncHandler(async (req, res) => {
+    //   const { phoneNumber, password } = req.body;
+    const visit = await Visit.findById(req.params.id);
+
+    if (visit) {
+      res.json(visit);
+    } else {
+      res.status(401);
+      throw new Error("User not Found");
+    }
+  })
+);
+
 visitRouter.post(
   "/",
   protect,
   asyncHandler(async (req, res) => {
     const careLog = {
       note: {},
-      coronaSymptoms: "",
+      coronaSymptoms: {},
       drink: {},
-      food: "",
+      food: {},
       toiletVisit: {},
       mood: {},
       mentalHealth: "",
       physicalHealth: "",
       weight: "",
     };
-    const {
-      startTime,
-      endTime,
-      date,
-      type,
-      serviceUserID,
-      careWorkers,
-      tasks,
-      medications,
-      PRNs,
-    } = req.body;
+    const { startTime, endTime, date, type, serviceUserID, careWorkers } =
+      req.body;
 
     const visitExists = await Visit.findOne({ date, type, serviceUserID });
 
@@ -47,9 +54,6 @@ visitRouter.post(
       serviceUserID,
       careWorkers,
       careLog,
-      // tasks,
-      // medications,
-      // PRNs,
     });
 
     if (visit) {
@@ -119,15 +123,23 @@ visitRouter.put(
     const visit = await Visit.findById(req.params.id);
 
     if (visit) {
-      visit.note = note || visit.note;
-      visit.coronaSymptoms = coronaSymptoms || visit.coronaSymptoms;
-      visit.drink = drink || visit.drink;
-      visit.food = food || visit.food;
-      visit.toiletVisit = toiletVisit || visit.toiletVisit;
-      visit.mood = mood || visit.mood;
-      visit.mentalHealth = mentalHealth || visit.mentalHealth;
-      visit.physicalHealth = physicalHealth || visit.physicalHealth;
-      visit.weight = weight || visit.weight;
+      visit.careLog.note = note ? note : visit.careLog.note;
+      visit.careLog.coronaSymptoms = coronaSymptoms
+        ? coronaSymptoms
+        : visit.careLog.coronaSymptoms;
+      visit.careLog.drink = drink ? drink : visit.careLog.drink;
+      visit.careLog.food = food ? food : visit.careLog.food;
+      visit.careLog.toiletVisit = toiletVisit
+        ? toiletVisit
+        : visit.careLog.toiletVisit;
+      visit.careLog.mood = mood ? mood : visit.careLog.mood;
+      visit.careLog.mentalHealth = mentalHealth
+        ? mentalHealth
+        : visit.careLog.mentalHealth;
+      visit.careLog.physicalHealth = physicalHealth
+        ? physicalHealth
+        : visit.careLog.physicalHealth;
+      visit.careLog.weight = weight ? weight : visit.careLog.weight;
 
       const updatedVisit = await visit.save();
       res.json(updatedVisit);

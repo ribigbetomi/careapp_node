@@ -25,6 +25,7 @@ serviceUserHandlerRouter.post(
         name: serviceUserHandler.name,
         phoneNumber: serviceUserHandler.phoneNumber,
         email: serviceUserHandler.email,
+        companyName: serviceUserHandler.companyName,
         isAdmin: serviceUserHandler.isAdmin,
         token: generateToken(serviceUserHandler.userID),
         createdAt: serviceUserHandler.createdAt,
@@ -49,8 +50,10 @@ serviceUserHandlerRouter.post(
     if (serviceUserHandlerExists) {
       res.status(201).json({
         _id: serviceUserHandlerExists._id,
+        userID: serviceUserHandlerExists.userID,
         name: serviceUserHandlerExists.name,
         email: serviceUserHandlerExists.email,
+        companyName: serviceUserHandlerExists.companyName,
         isAdmin: serviceUserHandlerExists.isAdmin,
         token: generateToken(serviceUserHandlerExists.userID),
       });
@@ -62,6 +65,7 @@ serviceUserHandlerRouter.post(
       const serviceUserHandler = await ServiceUserHandler.create({
         name: user.name,
         email: user.email,
+        companyName: user.companyName,
         // password,
         phoneNumber,
         userType: user.accessType,
@@ -73,6 +77,7 @@ serviceUserHandlerRouter.post(
           _id: serviceUserHandler._id,
           name: serviceUserHandler.name,
           email: serviceUserHandler.email,
+          companyName: serviceUserHandler.companyName,
           isAdmin: serviceUserHandler.isAdmin,
           token: generateToken(serviceUserHandler.userID),
         });
@@ -80,6 +85,38 @@ serviceUserHandlerRouter.post(
     }
   })
 );
+
+// // Update password
+// serviceUserHandlerRouter.put(
+//   "/:userID",
+//   protect,
+//   asyncHandler(async (req, res) => {
+//     const { password } = req.body;
+//     const serviceUserHandler = await ServiceUserHandler.findOne({
+//       userID: req.params.userID,
+//     });
+
+//     if (serviceUserHandler) {
+//       serviceUserHandler.password = serviceUserHandler.password;
+
+//       if (req.body.password) {
+//         serviceUserHandler.password = req.body.password;
+//       }
+//       const updatedServiceUserHandler = await serviceUserHandler.save();
+
+//       res.json({
+//         _id: updatedServiceUserHandler._id,
+//         name: updatedServiceUserHandler.name,
+//         phoneNumber: updatedServiceUserHandler.phoneNumber,
+//         email: updatedServiceUserHandler.email,
+//         availabilty: updatedServiceUserHandler.availabilty,
+//       });
+//     } else {
+//       res.status(401);
+//       throw new Error("User not Found");
+//     }
+//   })
+// );
 
 serviceUserHandlerRouter.get(
   "/:userID",
@@ -99,30 +136,36 @@ serviceUserHandlerRouter.get(
   })
 );
 
-careWorkerRouter.put(
+serviceUserHandlerRouter.put(
   "/:userID",
   protect,
   asyncHandler(async (req, res) => {
     const { name, phoneNumber, email, availability } = req.body;
-    const careWorker = await CareWorker.findOne({ userID: req.params.userID });
+    const serviceUserHandler = await ServiceUserHandler.findOne({
+      userID: req.params.userID,
+    });
 
-    if (careWorker) {
-      careWorker.name = name || careWorker.name;
-      careWorker.phoneNumber = phoneNumber || careWorker.phoneNumber;
-      careWorker.email = email || careWorker.email;
-      careWorker.availability = availability || careWorker.availability;
+    if (serviceUserHandler) {
+      serviceUserHandler.name = name ? name : serviceUserHandler.name;
+      serviceUserHandler.phoneNumber = phoneNumber
+        ? phoneNumber
+        : serviceUserHandler.phoneNumber;
+      serviceUserHandler.email = email ? email : serviceUserHandler.email;
+      serviceUserHandler.availability = availability
+        ? availability
+        : serviceUserHandler.availability;
 
       if (req.body.password) {
-        careWorker.password = req.body.password;
+        serviceUserHandler.password = req.body.password;
       }
-      const updatedCareWorker = await careWorker.save();
+      const updatedServiceUserHandler = await serviceUserHandler.save();
 
       res.json({
-        _id: updatedCareWorker._id,
-        name: updatedCareWorker.name,
-        phoneNumber: updatedCareWorker.phoneNumber,
-        email: updatedCareWorker.email,
-        availabilty: updatedCareWorker.availabilty,
+        _id: updatedServiceUserHandler._id,
+        name: updatedServiceUserHandler.name,
+        phoneNumber: updatedServiceUserHandler.phoneNumber,
+        email: updatedServiceUserHandler.email,
+        availabilty: updatedServiceUserHandler.availabilty,
       });
     } else {
       res.status(401);

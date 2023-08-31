@@ -17,6 +17,7 @@ const visitSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    companyName: { type: String, required: true },
     serviceUserID: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
@@ -45,7 +46,8 @@ const visitSchema = mongoose.Schema(
         type: String,
       },
       coronaSymptoms: {
-        type: String,
+        name: { type: String },
+        note: { type: String },
       },
       drink: {
         name: { type: String },
@@ -53,7 +55,8 @@ const visitSchema = mongoose.Schema(
         quantity: { type: String },
       },
       food: {
-        type: String,
+        type: { type: String },
+        note: { type: String },
       },
       toiletVisit: {
         type: { type: String },
