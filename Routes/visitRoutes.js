@@ -2,6 +2,7 @@ const express = require("express");
 const asyncHandler = require("express-async-handler");
 const { protect, admin } = require("../Middleware/AuthMiddleware");
 const Visit = require("../Models/visitModel");
+const moment = require("moment/moment");
 
 const visitRouter = express.Router();
 
@@ -118,6 +119,13 @@ visitRouter.put(
     if (careWorker) {
       if (checkOutTime) {
         careWorker.checkOutTime = checkOutTime;
+        const durationInMilliseconds = checkOutTime.diff(
+          careWorker.checkInTime
+        );
+        // const durationInMinutes = moment.duration(durationInMilliseconds).asMinutes();
+        careWorker.timeSpent = moment
+          .duration(durationInMilliseconds)
+          .asHours();
         let updatedCareWorkers = visit.careWorkers.map((cw) =>
           cw.userID === careWorker.userID ? careWorker : cw
         );
