@@ -21,7 +21,10 @@ const serviceUserSchema = mongoose.Schema(
     },
     visits: [
       {
-        ref: "Visit",
+        visitID: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Visit",
+        },
       },
     ],
     visitDays: [

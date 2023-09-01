@@ -4,23 +4,26 @@ const visitSchema = mongoose.Schema(
   {
     startTime: {
       type: Date,
-      required: true,
+      // required: true,
     },
     endTime: {
       type: Date,
-      required: true,
+      // required: true,
     },
     date: {
       type: Date,
     },
     type: {
       type: String,
-      required: true,
+      // required: true,
     },
-    companyName: { type: String, required: true },
+    companyName: {
+      type: String,
+      // , required: true
+    },
     serviceUserID: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
+      // required: true,
       ref: "ServiceUser",
     },
     careWorkers: [
@@ -80,7 +83,7 @@ const visitSchema = mongoose.Schema(
     tasks: [
       {
         name: { type: String },
-        required: true,
+        // required: true,
       },
     ],
     medications: [

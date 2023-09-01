@@ -33,7 +33,7 @@ const careWorkerSchema = mongoose.Schema(
 );
 
 // Login
-careWorker.methods.matchPassword = async function (enterPassword) {
+careWorkerSchema.methods.matchPassword = async function (enterPassword) {
   return await bcrypt.compare(enterPassword, this.password);
 };
 

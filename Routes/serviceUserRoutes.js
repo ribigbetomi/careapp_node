@@ -5,6 +5,40 @@ const ServiceUser = require("../Models/serviceUserModel");
 
 const serviceUserRouter = express.Router();
 
+// GET ALL serviceUsers
+serviceUserRouter.get(
+  "/",
+  // protect,
+  asyncHandler(async (req, res) => {
+    //   const { phoneNumber, password } = req.body;
+    const serviceUsers = await ServiceUser.find({});
+
+    if (serviceUsers) {
+      res.json(serviceUsers);
+    } else {
+      res.status(401);
+      throw new Error("User not Found");
+    }
+  })
+);
+
+// GET serviceUser
+serviceUserRouter.get(
+  "/:id",
+  protect,
+  asyncHandler(async (req, res) => {
+    //   const { phoneNumber, password } = req.body;
+    const serviceUser = await ServiceUser.findById(req.params.id);
+
+    if (serviceUser) {
+      res.json(serviceUser);
+    } else {
+      res.status(401);
+      throw new Error("User not Found");
+    }
+  })
+);
+
 // Register
 serviceUserRouter.post(
   "/",
@@ -42,22 +76,6 @@ serviceUserRouter.post(
     } else {
       res.status(400);
       throw new Error("Invalid User Data");
-    }
-  })
-);
-
-serviceUserRouter.get(
-  "/:id",
-  protect,
-  asyncHandler(async (req, res) => {
-    //   const { phoneNumber, password } = req.body;
-    const serviceUser = await ServiceUser.findById(req.params.id);
-
-    if (serviceUser) {
-      res.json(serviceUser);
-    } else {
-      res.status(401);
-      throw new Error("User not Found");
     }
   })
 );
