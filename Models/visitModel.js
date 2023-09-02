@@ -17,9 +17,9 @@ const visitSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    companyName: {
-      type: String,
-      // , required: true
+    company: {
+      name: { type: String, required: true },
+      branch: { type: String },
     },
     serviceUserID: {
       type: mongoose.Schema.Types.ObjectId,

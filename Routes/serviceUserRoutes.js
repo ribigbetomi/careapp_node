@@ -44,12 +44,19 @@ serviceUserRouter.post(
   "/",
   admin,
   asyncHandler(async (req, res) => {
-    const { name, address, entryNote, visitDays, scheduledVisits, gpContact } =
-      req.body;
+    const {
+      name,
+      address,
+      entryNote,
+      visitDays,
+      scheduledVisits,
+      gpContact,
+      company,
+    } = req.body;
 
     const serviceUserExists = await ServiceUser.findOne({ name, address });
 
-    if (serviceUserExists) {
+    if (serviceUserExists && serviceUserExists.company.name === company.name) {
       res.status(400);
       throw new Error("User with the same name and address already exists");
     }
@@ -61,6 +68,7 @@ serviceUserRouter.post(
       visitDays,
       scheduledVisits,
       gpContact,
+      company,
     });
 
     if (serviceUser) {
@@ -72,6 +80,7 @@ serviceUserRouter.post(
         visitDays: serviceUser.visitDays,
         scheduledVisits: serviceUser.scheduledVisits,
         gpContact: serviceUser.gpContact,
+        company: serviceUser.company,
       });
     } else {
       res.status(400);
@@ -109,8 +118,15 @@ serviceUserRouter.put(
   "/:id/profile",
   admin,
   asyncHandler(async (req, res) => {
-    const { name, address, entryNote, gpContact, visitDays, scheduledVisits } =
-      req.body;
+    const {
+      name,
+      address,
+      entryNote,
+      gpContact,
+      visitDays,
+      scheduledVisits,
+      company,
+    } = req.body;
     const serviceUser = await ServiceUser.findById(req.params.id);
 
     if (serviceUser) {
@@ -122,6 +138,7 @@ serviceUserRouter.put(
       serviceUser.scheduledVisits = scheduledVisits
         ? scheduledVisits
         : serviceUser.scheduledVisits;
+      serviceUser.company = company ? company : serviceUser.company;
 
       const updatedServiceUser = await serviceUser.save();
 

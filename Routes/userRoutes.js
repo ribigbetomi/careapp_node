@@ -8,14 +8,13 @@ const userRouter = express.Router();
 // Register
 userRouter.post(
   "/",
-  admin,
+  // admin,
   asyncHandler(async (req, res) => {
-    const { name, email, phoneNumber, accessType, isAdmin } = req.body;
+    const { name, email, phoneNumber, company, accessType, isAdmin } = req.body;
 
-    // if (userType === "careWorker") {
     const userExists = await User.findOne({ phoneNumber });
 
-    if (userExists) {
+    if (userExists && userExists.company.name === company.name) {
       res.status(400);
       throw new Error("User already exists");
     }
@@ -24,6 +23,7 @@ userRouter.post(
       name,
       email,
       phoneNumber,
+      company,
       accessType,
       isAdmin,
     });
@@ -36,35 +36,9 @@ userRouter.post(
         isAdmin: user.isAdmin,
         phoneNumber: user.phoneNumber,
         accessType: user.accessType,
-        //   token: generateToken(user._id),
+        company: user.company,
       });
-    }
-    // }
-    // else if (userType === "serviceUserHandler") {
-    //   const userExists = await ServiceUserHandler.findOne({ email });
-
-    //   if (userExists) {
-    //     res.status(400);
-    //     throw new Error("User already exists");
-    //   }
-
-    //   const user = await ServiceUserHandler.create({
-    //     name,
-    //     email,
-    //     password,
-    //   });
-
-    //   if (user) {
-    //     res.status(201).json({
-    //       _id: user._id,
-    //       name: user.name,
-    //       email: user.email,
-    //       isAdmin: user.isAdmin,
-    //       token: generateToken(user._id),
-    //     });
-    //   }
-    // }
-    else {
+    } else {
       res.status(400);
       throw new Error("Invalid User Data");
     }

@@ -25,7 +25,7 @@ serviceUserHandlerRouter.post(
         name: serviceUserHandler.name,
         phoneNumber: serviceUserHandler.phoneNumber,
         email: serviceUserHandler.email,
-        companyName: serviceUserHandler.companyName,
+        company: serviceUserHandler.company,
         isAdmin: serviceUserHandler.isAdmin,
         token: generateToken(serviceUserHandler.userID),
         createdAt: serviceUserHandler.createdAt,
@@ -53,7 +53,7 @@ serviceUserHandlerRouter.post(
         userID: serviceUserHandlerExists.userID,
         name: serviceUserHandlerExists.name,
         email: serviceUserHandlerExists.email,
-        companyName: serviceUserHandlerExists.companyName,
+        company: serviceUserHandlerExists.company,
         isAdmin: serviceUserHandlerExists.isAdmin,
         token: generateToken(serviceUserHandlerExists.userID),
       });
@@ -65,7 +65,7 @@ serviceUserHandlerRouter.post(
       const serviceUserHandler = await ServiceUserHandler.create({
         name: user.name,
         email: user.email,
-        companyName: user.companyName,
+        company: user.company,
         // password,
         phoneNumber,
         userType: user.accessType,
@@ -77,7 +77,7 @@ serviceUserHandlerRouter.post(
           _id: serviceUserHandler._id,
           name: serviceUserHandler.name,
           email: serviceUserHandler.email,
-          companyName: serviceUserHandler.companyName,
+          company: serviceUserHandler.company,
           isAdmin: serviceUserHandler.isAdmin,
           token: generateToken(serviceUserHandler.userID),
         });

@@ -15,7 +15,11 @@ const careWorkerSchema = mongoose.Schema(
     phoneNumber: { type: Number, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
-    companyName: { type: String, required: true },
+    withCompany: { type: Boolean, required: true },
+    company: {
+      name: { type: String, required: true },
+      branch: { type: String },
+    },
     visits: [
       {
         id: { type: mongoose.Schema.Types.ObjectId, ref: "Visit" },

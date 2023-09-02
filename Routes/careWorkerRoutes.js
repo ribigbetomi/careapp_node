@@ -11,8 +11,8 @@ const careWorkerRouter = express.Router();
 careWorkerRouter.post(
   "/login",
   asyncHandler(async (req, res) => {
-    const { phoneNumber, password } = req.body;
-    const careWorker = await CareWorker.findOne({ phoneNumber });
+    const { phoneNumber, password, withCompany } = req.body;
+    const careWorker = await CareWorker.findOne({ phoneNumber, withCompany });
 
     if (careWorker && (await careWorker.matchPassword(password))) {
       res.json({
@@ -20,7 +20,7 @@ careWorkerRouter.post(
         name: careWorker.name,
         phoneNumber: careWorker.phoneNumber,
         email: careWorker.email,
-        companyName: careWorker.companyName,
+        company: careWorker.company,
         isAdmin: careWorker.isAdmin,
         token: generateToken(careWorker.userID),
         createdAt: careWorker.createdAt,
@@ -36,29 +36,29 @@ careWorkerRouter.post(
 careWorkerRouter.post(
   "/",
   asyncHandler(async (req, res) => {
-    const { name, email, password, phoneNumber, userType, userID } = req.body;
+    const { password, phoneNumber } = req.body;
 
     const careWorkerExists = await CareWorker.findOne({ phoneNumber });
 
-    if (careWorkerExists) {
+    if (careWorkerExists && careWorkerExists.withCompany === true) {
       res.status(201).json({
         _id: careWorkerExists._id,
         name: careWorkerExists.name,
         email: careWorkerExists.email,
-        companyName: careWorkerExists.companyName,
+        company: careWorkerExists.company,
         isAdmin: careWorkerExists.isAdmin,
         token: generateToken(careWorkerExists.userID),
       });
     }
 
-    const user = await User.findOne({ phoneNumber });
+    const user = await User.findOne({ phoneNumber, withCompany: true });
 
     if (user) {
       const careWorker = await CareWorker.create({
         name: user.name,
         email: user.email,
-        companyName: user.companyName,
-        // password,
+        company: user.company,
+        password,
         phoneNumber: user.phoneNumber,
         userType: user.accessType,
         userID: user._id,
@@ -69,7 +69,7 @@ careWorkerRouter.post(
           userID: careWorker.userID,
           name: careWorker.name,
           email: careWorker.email,
-          companyName: careWorker.companyName,
+          company: careWorker.company,
           phoneNumber: careWorker.phoneNumber,
           userType: careWorker.userType,
           token: generateToken(careWorker.userID),
@@ -100,12 +100,16 @@ careWorkerRouter.get(
   })
 );
 
+// Update Password
 careWorkerRouter.put(
   "/:userID",
   protect,
   asyncHandler(async (req, res) => {
     const { password } = req.body;
-    const careWorker = await CareWorker.findOne({ userID: req.params.userID });
+    const careWorker = await CareWorker.findOne({
+      userID: req.params.userID,
+      withCompany: true,
+    });
 
     if (careWorker) {
       if (password) {
@@ -126,11 +130,12 @@ careWorkerRouter.put(
   })
 );
 
+// Update details
 careWorkerRouter.put(
   "/:userID",
   admin,
   asyncHandler(async (req, res) => {
-    const { name, phoneNumber, email, availability } = req.body;
+    const { name, phoneNumber, email, availability, withCompany } = req.body;
     const careWorker = await CareWorker.findOne({ userID: req.params.userID });
 
     if (careWorker) {
@@ -142,6 +147,9 @@ careWorkerRouter.put(
       careWorker.availability = availability
         ? availability
         : careWorker.availability;
+      careWorker.withCompany = withCompany
+        ? withCompany
+        : careWorker.withCompany;
 
       const updatedCareWorker = await careWorker.save();
 

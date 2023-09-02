@@ -7,7 +7,11 @@ const serviceUserHandlerSchema = mongoose.Schema(
       required: true,
       ref: "User",
     },
-    companyName: { type: String, required: true },
+    company: {
+      name: { type: String, required: true },
+      branch: { type: String },
+    },
+    withCompany: { type: Boolean, required: true },
     name: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
