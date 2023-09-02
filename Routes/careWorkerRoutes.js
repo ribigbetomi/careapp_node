@@ -11,8 +11,11 @@ const careWorkerRouter = express.Router();
 careWorkerRouter.post(
   "/login",
   asyncHandler(async (req, res) => {
-    const { phoneNumber, password, withCompany } = req.body;
-    const careWorker = await CareWorker.findOne({ phoneNumber, withCompany });
+    const { phoneNumber, password } = req.body;
+    const careWorker = await CareWorker.findOne({
+      phoneNumber,
+      withCompany: true,
+    });
 
     if (careWorker && (await careWorker.matchPassword(password))) {
       res.json({
@@ -38,9 +41,12 @@ careWorkerRouter.post(
   asyncHandler(async (req, res) => {
     const { password, phoneNumber } = req.body;
 
-    const careWorkerExists = await CareWorker.findOne({ phoneNumber });
+    const careWorkerExists = await CareWorker.findOne({
+      phoneNumber,
+      withCompany: true,
+    });
 
-    if (careWorkerExists && careWorkerExists.withCompany === true) {
+    if (careWorkerExists) {
       res.status(201).json({
         _id: careWorkerExists._id,
         name: careWorkerExists.name,
@@ -58,6 +64,7 @@ careWorkerRouter.post(
         name: user.name,
         email: user.email,
         company: user.company,
+        withCompany: true,
         password,
         phoneNumber: user.phoneNumber,
         userType: user.accessType,

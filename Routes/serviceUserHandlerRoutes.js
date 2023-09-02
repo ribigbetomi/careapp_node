@@ -14,6 +14,7 @@ serviceUserHandlerRouter.post(
     const { phoneNumber, password } = req.body;
     const serviceUserHandler = await ServiceUserHandler.findOne({
       phoneNumber,
+      withCompany: true,
     });
 
     if (
@@ -41,10 +42,11 @@ serviceUserHandlerRouter.post(
 serviceUserHandlerRouter.post(
   "/",
   asyncHandler(async (req, res) => {
-    const { phoneNumber } = req.body;
+    const { phoneNumber, password } = req.body;
 
     const serviceUserHandlerExists = await ServiceUserHandler.findOne({
       phoneNumber,
+      withCompany: true,
     });
 
     if (serviceUserHandlerExists) {
@@ -59,14 +61,14 @@ serviceUserHandlerRouter.post(
       });
     }
 
-    const user = await User.findOne({ phoneNumber });
+    const user = await User.findOne({ phoneNumber, withCompany });
 
     if (user) {
       const serviceUserHandler = await ServiceUserHandler.create({
         name: user.name,
         email: user.email,
         company: user.company,
-        // password,
+        password,
         phoneNumber,
         userType: user.accessType,
         userID: user._id,
@@ -94,6 +96,7 @@ serviceUserHandlerRouter.put(
     const { password } = req.body;
     const serviceUserHandler = await ServiceUserHandler.findOne({
       userID: req.params.userID,
+      withCompany: true,
     });
 
     if (serviceUserHandler) {
@@ -137,7 +140,7 @@ serviceUserHandlerRouter.put(
   "/:userID",
   admin,
   asyncHandler(async (req, res) => {
-    const { name, phoneNumber, email, availability } = req.body;
+    const { name, phoneNumber, email, availability, withCompany } = req.body;
     const serviceUserHandler = await ServiceUserHandler.findOne({
       userID: req.params.userID,
     });
@@ -151,6 +154,9 @@ serviceUserHandlerRouter.put(
       serviceUserHandler.availability = availability
         ? availability
         : serviceUserHandler.availability;
+      serviceUserHandler.withCompany = withCompany
+        ? withCompany
+        : serviceUserHandler.withCompany;
 
       const updatedServiceUserHandler = await serviceUserHandler.save();
 
