@@ -11,7 +11,7 @@ serviceUserRouter.get(
   // protect,
   asyncHandler(async (req, res) => {
     //   const { phoneNumber, password } = req.body;
-    const serviceUsers = await ServiceUser.find({});
+    const serviceUsers = await ServiceUser.find({ withCompany: true });
 
     if (serviceUsers) {
       res.json(serviceUsers);
@@ -69,6 +69,7 @@ serviceUserRouter.post(
       scheduledVisits,
       gpContact,
       company,
+      withCompany: true,
     });
 
     if (serviceUser) {
@@ -126,6 +127,7 @@ serviceUserRouter.put(
       visitDays,
       scheduledVisits,
       company,
+      withCompany,
     } = req.body;
     const serviceUser = await ServiceUser.findById(req.params.id);
 
@@ -139,6 +141,9 @@ serviceUserRouter.put(
         ? scheduledVisits
         : serviceUser.scheduledVisits;
       serviceUser.company = company ? company : serviceUser.company;
+      serviceUser.withCompany = withCompany
+        ? withCompany
+        : serviceUser.withCompany;
 
       const updatedServiceUser = await serviceUser.save();
 

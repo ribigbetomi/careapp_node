@@ -2,6 +2,7 @@ const express = require("express");
 const asyncHandler = require("express-async-handler");
 const { admin } = require("../Middleware/AuthMiddleware");
 const User = require("../Models/userModel");
+const { default: axios } = require("axios");
 
 const userRouter = express.Router();
 
@@ -15,6 +16,17 @@ userRouter.post(
     const userExists = await User.findOne({ phoneNumber });
 
     if (userExists && userExists.company.name === company.name) {
+      if (!userExists.withCompany) {
+        let withCompany = true;
+        await axios.put(
+          `http://localhost:5000/api/user/${userExists._id}`,
+          {
+            headers: { authorization: `Bearer ${userInfo.token}` },
+            "content-type": "application/json",
+          },
+          withCompany
+        );
+      }
       res.status(400);
       throw new Error("User already exists");
     }
@@ -26,6 +38,7 @@ userRouter.post(
       company,
       accessType,
       isAdmin,
+      withCompany: true,
     });
 
     if (user) {
@@ -41,6 +54,31 @@ userRouter.post(
     } else {
       res.status(400);
       throw new Error("Invalid User Data");
+    }
+  })
+);
+
+userRouter.put(
+  "/:id",
+  admin,
+  asyncHandler(async (req, res) => {
+    const withCompany = req.body;
+    const user = await User.findById(req.params.id);
+
+    if (user) {
+      user.withCompany = withCompany;
+
+      const updatedUser = await user.save();
+
+      res.json({
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        phoneNumber: updatedUser.phoneNumber,
+        email: updatedUser.email,
+      });
+    } else {
+      res.status(401);
+      throw new Error("User not Found");
     }
   })
 );
