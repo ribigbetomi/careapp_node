@@ -20,8 +20,8 @@ const serviceUserSchema = mongoose.Schema(
     },
     withCompany: { type: Boolean, required: true },
     gpContact: {
-      type: "String",
-      required: true,
+      name: { type: String, required: true },
+      phoneNumber: { type: String, required: true },
     },
     visits: [
       {
@@ -47,14 +47,14 @@ const serviceUserSchema = mongoose.Schema(
         ],
         medications: [
           {
-            type: String,
-            required: true,
+            name: { type: String, required: true },
+            dosage: { type: String, required: true },
           },
         ],
         PRNs: [
           {
-            type: String,
-            required: true,
+            name: { type: String, required: true },
+            dosage: { type: String, required: true },
           },
         ],
       },
@@ -67,14 +67,14 @@ const serviceUserSchema = mongoose.Schema(
         ],
         medications: [
           {
-            type: String,
-            required: true,
+            name: { type: String, required: true },
+            dosage: { type: String, required: true },
           },
         ],
         PRNs: [
           {
-            type: String,
-            required: true,
+            name: { type: String, required: true },
+            dosage: { type: String, required: true },
           },
         ],
       },
@@ -87,14 +87,14 @@ const serviceUserSchema = mongoose.Schema(
         ],
         medications: [
           {
-            type: String,
-            required: true,
+            name: { type: String, required: true },
+            dosage: { type: String, required: true },
           },
         ],
         PRNs: [
           {
-            type: String,
-            required: true,
+            name: { type: String, required: true },
+            dosage: { type: String, required: true },
           },
         ],
       },
@@ -107,14 +107,14 @@ const serviceUserSchema = mongoose.Schema(
         ],
         medications: [
           {
-            type: String,
-            required: true,
+            name: { type: String, required: true },
+            dosage: { type: String, required: true },
           },
         ],
         PRNs: [
           {
-            type: String,
-            required: true,
+            name: { type: String, required: true },
+            dosage: { type: String, required: true },
           },
         ],
       },

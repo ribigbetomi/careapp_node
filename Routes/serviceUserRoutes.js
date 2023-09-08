@@ -25,7 +25,7 @@ serviceUserRouter.get(
 // GET serviceUser
 serviceUserRouter.get(
   "/:id",
-  protect,
+  // protect,
   asyncHandler(async (req, res) => {
     //   const { phoneNumber, password } = req.body;
     const serviceUser = await ServiceUser.findById(req.params.id);
@@ -42,7 +42,7 @@ serviceUserRouter.get(
 // Register
 serviceUserRouter.post(
   "/",
-  admin,
+  // admin,
   asyncHandler(async (req, res) => {
     const {
       name,
