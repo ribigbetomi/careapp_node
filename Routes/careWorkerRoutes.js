@@ -139,7 +139,7 @@ careWorkerRouter.put(
 
 // Update details
 careWorkerRouter.put(
-  "/:userID",
+  "/update/:userID",
   admin,
   asyncHandler(async (req, res) => {
     const { name, phoneNumber, email, availability, withCompany } = req.body;

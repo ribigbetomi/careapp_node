@@ -22,6 +22,7 @@ const serviceUserSchema = mongoose.Schema(
     gpContact: {
       name: { type: String, required: true },
       phoneNumber: { type: String, required: true },
+      address: { type: String, required: true },
     },
     visits: [
       {
@@ -51,7 +52,7 @@ const serviceUserSchema = mongoose.Schema(
             dosage: { type: String, required: true },
           },
         ],
-        PRNs: [
+        prns: [
           {
             name: { type: String, required: true },
             dosage: { type: String, required: true },
@@ -71,7 +72,7 @@ const serviceUserSchema = mongoose.Schema(
             dosage: { type: String, required: true },
           },
         ],
-        PRNs: [
+        prns: [
           {
             name: { type: String, required: true },
             dosage: { type: String, required: true },
@@ -91,7 +92,7 @@ const serviceUserSchema = mongoose.Schema(
             dosage: { type: String, required: true },
           },
         ],
-        PRNs: [
+        prns: [
           {
             name: { type: String, required: true },
             dosage: { type: String, required: true },
@@ -111,7 +112,7 @@ const serviceUserSchema = mongoose.Schema(
             dosage: { type: String, required: true },
           },
         ],
-        PRNs: [
+        prns: [
           {
             name: { type: String, required: true },
             dosage: { type: String, required: true },
